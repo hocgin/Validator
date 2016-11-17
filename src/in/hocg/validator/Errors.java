@@ -1,9 +1,6 @@
 package in.hocg.validator;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * (๑`灬´๑)
@@ -13,13 +10,13 @@ import java.util.Map;
  */
 public class Errors {
 
-    private Map<String, List<String>> errors = new HashMap<>();
+    private Map<String, Set<String>> errors = new HashMap<>();
 
     /**
      * 返回所有错误信息
      * @return
      */
-    public Map<String, List<String>> all() {
+    public Map<String, Set<String>> all() {
         return this.errors;
     }
 
@@ -45,9 +42,9 @@ public class Errors {
      * @param message
      */
     public void add(String ruleKey, String message) {
-        List<String> messages = errors.get(ruleKey);
+        Set<String> messages = errors.get(ruleKey);
         if (messages == null) {
-            messages = new ArrayList<>();
+            messages = new HashSet<>();
         }
         messages.add(message);
         this.errors.put(ruleKey, messages);

@@ -3,8 +3,8 @@ package in.hocg.validator;
 import com.sun.istack.internal.NotNull;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * (๑`灬´๑)
@@ -83,7 +83,7 @@ public class Validator implements Cloneable {
                         && !validation.validate(filedName, value, parameters)) { // 校验失败
                     String message;
                     if (customAttributes == null
-                            || StringsUtil.isEmpty(message = customAttributes.get(dictate))) {
+                            || StringsUtil.isEmpty(message = customAttributes.get(filedName))) {
                         String template;
                         if (messages != null
                                 && !StringsUtil.isEmpty(template = messages.get(dictate))) {
@@ -364,7 +364,7 @@ public class Validator implements Cloneable {
      * 获取所有错误信息
      * @return
      */
-    public Map<String, List<String>> messages() {
+    public Map<String, Set<String>> messages() {
         return this.errors.all();
     }
 

@@ -37,7 +37,7 @@ validator.extend("size", new Size())
 ```
 
 ### 3. 错误信息级别
-> 验证器定义默认描述(error()) < make传入消息模板(messages) < 定制错误消息(customAttributes)
+> 验证器定义默认描述(error()) < make传入指令消息模板(messages) < 定制错误消息(customAttributes)
 
 ### 4. 校验钩子
 ```groovy

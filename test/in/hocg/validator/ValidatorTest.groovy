@@ -81,7 +81,7 @@ class ValidatorTest extends GroovyTestCase {
                 "required":"模板 required",
                 "size":"模板 :size size",
         ], [
-                "size":"[最高级别] 字段不能XXX"
+                "name":"[最高级别] 字段不能XXX"
         ], new Errors.AfterListener() {
             void run(Errors errors) {
                 println "校验结果: " + errors.passed()

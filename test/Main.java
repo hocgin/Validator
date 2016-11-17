@@ -2,8 +2,8 @@ import in.hocg.validator.Validator;
 import in.hocg.validator.validations.Size;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * (๑`灬´๑)
@@ -44,7 +44,7 @@ public class Main {
      * Print
      * @param errors
      */
-    public static void print(Map<String, List<String>> errors) {
+    public static void print(Map<String, Set<String>> errors) {
         if (errors.isEmpty()) {
             System.out.println("SUCCESS");
         }
