@@ -12,12 +12,24 @@ import java.util.Map;
  */
 public class Regex extends Validation {
     @Override
-    public boolean validate(String ruleKey, String[] values, String[] parameters) {
-        return false;
+    public boolean validate(String filedName, String[] values, String[] parameters) {
+        if (values != null) {
+            for (String value : values) {
+                if (!_isMatch(parameters[0], value)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     @Override
-    public String error(String ruleKey, Map<String, String> rule, String[] parameters) {
-        return null;
+    public String error(String filedName, Map<String, String[]> rule, String[] parameters) {
+        return String.format("%s 不满足正则/%s/", filedName, parameters[0]);
+    }
+
+    @Override
+    protected String[] parameters(String parametersStr) {
+        return new String[]{parametersStr};
     }
 }

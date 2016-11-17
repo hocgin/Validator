@@ -1,4 +1,5 @@
-import in.hocg.web.validation.*;
+import in.hocg.web.validation.Validator;
+import in.hocg.web.validation.validations.Size;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,15 +14,36 @@ import java.util.Map;
 public class Main {
     public static void main(String[] args) {
         Map<String, String[]> params = new HashMap<String, String[]>(){{
-            put("name", null);
+            put("name", new String[]{"az"});
         }};
-        Errors errors = in.hocg.web.validation.Validator.makes(params, new HashMap<String, String>() {{
-            put("name", "required|min:5");
-        }});
-        print(errors.all());
+        HashMap<String, String[]> rules = new HashMap<String, String[]>() {{
+            put("name", new String[]{"required", "min:5", "regex:^[a-z]+$", "size:0"});
+        }};
+//        Errors errors = in.hocg.web.validation.Validator.makes(params, rules);
+
+        Validator validator = new Validator();
+        validator.make(params, rules);
+        try {
+            validator = validator.replacer("size", new Size());
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        validator.make(params, rules);
+
+
+//        print(errors.all());
+        try {
+            print(validator.errors().all());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
-
+    /**
+     * Print
+     * @param errors
+     */
     public static void print(Map<String, List<String>> errors) {
         if (errors.isEmpty()) {
             System.out.println("SUCCESS");

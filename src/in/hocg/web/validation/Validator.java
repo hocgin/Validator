@@ -2,6 +2,7 @@ package in.hocg.web.validation;
 
 import com.sun.istack.internal.NotNull;
 import in.hocg.web.validation.validations.Min;
+import in.hocg.web.validation.validations.Regex;
 import in.hocg.web.validation.validations.Required;
 
 import java.util.HashMap;
@@ -31,70 +32,68 @@ public class Validator implements Cloneable {
     private Map<String, Validation> localValidations = new HashMap<>();
     private Errors errors;
     private AfterListener afterListener;
-    private Map<String, String> rules;
+    private Map<String, String[]> rules;
     private Map<String, String> messages;
     private Map<String, String> customAttributes;
 
     static {
         GLOBAL_VALIDATIONS.put("required", new Required());
         GLOBAL_VALIDATIONS.put("min", new Min());
+        GLOBAL_VALIDATIONS.put("regex", new Regex());
     }
 
 
     /**
      * 进行校验
      * @param request 校验值
-     * @param rules 规则
+     * @param rules 规则{指令:参数}
      * @param messages 规则对应的模板 {规则:模板}
      * @param customAttributes 最高级别的错误信息
      * @param validations 规则处理器
      * @param listener after监听
      */
     public static Errors makes(@NotNull Map<String, String[]> request,
-                               @NotNull Map<String, String> rules,
+                               @NotNull Map<String, String[]> rules,
                                Map<String, String> messages,
                                Map<String, String> customAttributes,
                                @NotNull Map<String, Validation> validations,
                                Errors.AfterListener listener) {
 
         Errors errors = new Errors();
-        for (String ruleKey : rules.keySet()) {
-            String ruleValue = rules.get(ruleKey);
-            String[] attributes = ruleValue.split("\\|");
-            String[] value = request.get(ruleKey);
+        for (String filedName : rules.keySet()) {
+            String[] attributes = rules.get(filedName);
+            String[] value = request.get(filedName);
             String[] parameters = null;
             for (String attribute : attributes) {
                 Validation validation;
+                String dictate;
                 if (attribute.contains(":")) {
-                    String[] params = attribute.split("\\:");
-                    validation = validations.get(params[0]);
-                    if (params.length > 1
-                            && params[1].contains(",")) {
-                        parameters = params[1].split("\\,");
-                        // 清理参数的前后空格
-                        parameters = StringsUtil.trimElement(parameters);
-                    } else {
-                        parameters = new String[]{params[1].trim()};
+                    String[] params = attribute.split("\\:", 2);
+                    validation = validations.get(dictate = params[0]);
+                    if (validation == null) { // 无匹配的 校验器
+                        System.out.println(String.format("[%s] 无匹配的校验器", dictate));
+                        break;
                     }
+                    parameters = validation.parameters(params[1]);
                 } else {
-                    validation = validations.get(attribute);
+                    validation = validations.get(dictate = attribute);
                 }
                 if (validation != null
-                        && !validation.validate(attribute, value, parameters)) { // 校验失败
+                        && !validation.validate(filedName, value, parameters)) { // 校验失败
                     String message;
                     if (customAttributes == null
-                            || StringsUtil.isEmpty(message = customAttributes.get(attribute))) {
+                            || StringsUtil.isEmpty(message = customAttributes.get(dictate))) {
                         String template;
                         if (messages != null
-                                && !StringsUtil.isEmpty(template = messages.get(attribute))) {
+                                && !StringsUtil.isEmpty(template = messages.get(dictate))) {
                             // 模板定义的错误信息
-                            message = validation.replace(template, ruleKey, rules, parameters);
+                            message = validation.replace(template, filedName, rules, parameters);
                         } else {
                             // 默认错误信息
-                            message = validation.error(ruleKey, rules, parameters);
+                            message = validation.error(filedName, rules, parameters);
                         }
                     }
-                    errors.add(ruleKey, message);
+                    errors.add(filedName, message);
                 }
             }
         }
@@ -113,7 +112,7 @@ public class Validator implements Cloneable {
      * @param listener after监听
      */
     public static Errors makes(@NotNull Map<String, String[]> request,
-                              @NotNull Map<String, String> rules,
+                              @NotNull Map<String, String[]> rules,
                               Map<String, String> messages,
                               Map<String, String> customAttributes,
                               Errors.AfterListener listener) {
@@ -128,7 +127,7 @@ public class Validator implements Cloneable {
      * @param customAttributes 最高级别的错误信息
      */
     public static Errors makes(@NotNull Map<String, String[]> request,
-                               @NotNull Map<String, String> rules,
+                               @NotNull Map<String, String[]> rules,
                                Map<String, String> messages,
                                Map<String, String> customAttributes) {
         return Validator.makes(request, rules, messages, customAttributes, Validator.GLOBAL_VALIDATIONS, null);
@@ -140,7 +139,7 @@ public class Validator implements Cloneable {
      * @param rules 规则
      */
     public static Errors makes(@NotNull Map<String, String[]> request,
-                               @NotNull Map<String, String> rules) {
+                               @NotNull Map<String, String[]> rules) {
         return Validator.makes(request, rules, null, null, Validator.GLOBAL_VALIDATIONS, null);
     }
 
@@ -154,8 +153,8 @@ public class Validator implements Cloneable {
      * @param customAttributes 最高级别的错误信息
      * @return
      */
-    public Validator make(Map<String, String[]> request,
-                          @NotNull Map<String, String> rules,
+    public Validator make(@NotNull Map<String, String[]> request,
+                          @NotNull Map<String, String[]> rules,
                           @NotNull Map<String, String> messages,
                           @NotNull Map<String, String> customAttributes) {
         rules = addRules(rules).getRules();
@@ -176,15 +175,16 @@ public class Validator implements Cloneable {
      * @param request 校验值
      * @return
      */
-    public Validator make(Map<String, String[]> request) {
-        return this.make(request, new HashMap<>(), new HashMap<>(), new HashMap<>());
+    public Validator make(@NotNull Map<String, String[]> request,
+                          @NotNull Map<String, String[]> rules) {
+        return this.make(request, rules, new HashMap<>(), new HashMap<>());
     }
 
-    public Map<String, String> getRules() {
+    public Map<String, String[]> getRules() {
         return rules;
     }
 
-    public void setRules(Map<String, String> rules) {
+    public void setRules(Map<String, String[]> rules) {
         this.rules = rules;
     }
 
@@ -194,7 +194,7 @@ public class Validator implements Cloneable {
      * @param ruleValue
      * @return
      */
-    public Validator addRule(String ruleKey, String ruleValue) {
+    public Validator addRule(String ruleKey, String[] ruleValue) {
         if (this.rules == null) {
             this.rules = new HashMap<>();
         }
@@ -207,7 +207,7 @@ public class Validator implements Cloneable {
      * @param rules
      * @return
      */
-    public Validator addRules(Map<String, String> rules) {
+    public Validator addRules(Map<String, String[]> rules) {
         if (this.rules == null) {
             this.rules = new HashMap<>();
         }
