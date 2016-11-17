@@ -38,17 +38,47 @@ public class Errors {
 
     /**
      * 加入一条错误信息
-     * @param ruleKey
+     * @param filedName
      * @param message
      */
-    public void add(String ruleKey, String message) {
-        Set<String> messages = errors.get(ruleKey);
+    public void add(String filedName, String message) {
+        Set<String> messages = errors.get(filedName);
         if (messages == null) {
             messages = new HashSet<>();
         }
         messages.add(message);
-        this.errors.put(ruleKey, messages);
+        this.errors.put(filedName, messages);
     }
+
+    /**
+     * 获取指定字段名的第一条错误信息
+     * @param filedName
+     * @return
+     */
+    public String first(String filedName) {
+        Set<String> errorSet = get(filedName);
+        return errorSet != null && !errorSet.isEmpty() ? errorSet.iterator().next() : null;
+    }
+
+    /**
+     * 判断某字段是否有错误信息
+     * @param filedName
+     * @return
+     */
+    public boolean has(String filedName) {
+        Set<String> errorSet = get(filedName);
+        return errorSet != null && !errorSet.isEmpty();
+    }
+
+    /**
+     * 获取某字段的所有错误列表
+     * @param filedName
+     * @return
+     */
+    public Set<String> get(String filedName) {
+        return this.errors.get(filedName);
+    }
+
 
     public interface AfterListener {
         void run(Errors errors);
