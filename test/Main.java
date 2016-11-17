@@ -1,5 +1,5 @@
-import in.hocg.web.validation.Validator;
-import in.hocg.web.validation.validations.Size;
+import in.hocg.validator.Validator;
+import in.hocg.validator.validations.Size;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +19,7 @@ public class Main {
         HashMap<String, String[]> rules = new HashMap<String, String[]>() {{
             put("name", new String[]{"required", "min:5", "regex:^[a-z]+$", "size:0"});
         }};
-//        Errors errors = in.hocg.web.validation.Validator.makes(params, rules);
+//        Errors errors = in.hocg.validator.Validator.makes(params, rules);
 
         Validator validator = new Validator();
         validator.make(params, rules);

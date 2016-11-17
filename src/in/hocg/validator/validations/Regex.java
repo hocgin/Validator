@@ -1,6 +1,6 @@
-package in.hocg.web.validation.validations;
+package in.hocg.validator.validations;
 
-import in.hocg.web.validation.Validation;
+import in.hocg.validator.Validation;
 
 import java.util.Map;
 
@@ -9,15 +9,13 @@ import java.util.Map;
  * hocgin(admin@hocg.in)
  * --------------------
  * Created 16-11-17.
- *
- * size:value
  */
-public class Size extends Validation {
+public class Regex extends Validation {
     @Override
     public boolean validate(String filedName, String[] values, String[] parameters) {
         if (values != null) {
             for (String value : values) {
-                if (value.length() > Long.valueOf(parameters[0])) {
+                if (!_isMatch(parameters[0], value)) {
                     return false;
                 }
             }
@@ -27,11 +25,11 @@ public class Size extends Validation {
 
     @Override
     public String error(String filedName, Map<String, String[]> rule, String[] parameters) {
-        return String.format("%s 的长度 不能小于 %s", filedName, parameters[0]);
+        return String.format("%s 不满足正则/%s/", filedName, parameters[0]);
     }
 
     @Override
-    public String replace(String message, String filedName, Map<String, String[]> rule, String[] parameters) {
-        return message.replace(":size", parameters[0]);
+    protected String[] parameters(String parametersStr) {
+        return new String[]{parametersStr};
     }
 }

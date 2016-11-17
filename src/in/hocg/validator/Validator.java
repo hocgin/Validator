@@ -1,9 +1,9 @@
-package in.hocg.web.validation;
+package in.hocg.validator;
 
 import com.sun.istack.internal.NotNull;
-import in.hocg.web.validation.validations.Min;
-import in.hocg.web.validation.validations.Regex;
-import in.hocg.web.validation.validations.Required;
+import in.hocg.validator.validations.Min;
+import in.hocg.validator.validations.Regex;
+import in.hocg.validator.validations.Required;
 
 import java.util.HashMap;
 import java.util.List;

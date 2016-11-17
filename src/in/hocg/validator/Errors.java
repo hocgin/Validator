@@ -1,4 +1,4 @@
-package in.hocg.web.validation;
+package in.hocg.validator;
 
 import java.util.ArrayList;
 import java.util.HashMap;

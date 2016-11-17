@@ -1,4 +1,4 @@
-package in.hocg.web.validation;
+package in.hocg.validator;
 
 /**
  * (๑`灬´๑)

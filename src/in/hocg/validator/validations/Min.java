@@ -1,6 +1,6 @@
-package in.hocg.web.validation.validations;
+package in.hocg.validator.validations;
 
-import in.hocg.web.validation.Validation;
+import in.hocg.validator.Validation;
 
 import java.util.Map;
 
@@ -10,12 +10,13 @@ import java.util.Map;
  * --------------------
  * Created 16-11-17.
  */
-public class Regex extends Validation {
+public class Min extends Validation {
     @Override
     public boolean validate(String filedName, String[] values, String[] parameters) {
         if (values != null) {
             for (String value : values) {
-                if (!_isMatch(parameters[0], value)) {
+                if (!_isNumeric(value)) return false;
+                if (Long.valueOf(value) >= Long.valueOf(parameters[0])) {
                     return false;
                 }
             }
@@ -25,11 +26,6 @@ public class Regex extends Validation {
 
     @Override
     public String error(String filedName, Map<String, String[]> rule, String[] parameters) {
-        return String.format("%s 不满足正则/%s/", filedName, parameters[0]);
-    }
-
-    @Override
-    protected String[] parameters(String parametersStr) {
-        return new String[]{parametersStr};
+        return String.format("%s 不能小于 %s", filedName, parameters[0]);
     }
 }

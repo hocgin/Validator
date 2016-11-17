@@ -1,6 +1,6 @@
-package in.hocg.web.validation
+package in.hocg.validator
 
-import in.hocg.web.validation.validations.Size
+import in.hocg.validator.validations.Size
 
 /**
  * (๑`灬´๑)

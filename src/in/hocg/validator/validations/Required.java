@@ -1,6 +1,6 @@
-package in.hocg.web.validation.validations;
+package in.hocg.validator.validations;
 
-import in.hocg.web.validation.Validation;
+import in.hocg.validator.Validation;
 
 import java.util.Map;
 
