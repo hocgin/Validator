@@ -1,5 +1,8 @@
 package in.hocg.validator
 
+import in.hocg.validator.validations.Min
+import in.hocg.validator.validations.Regex
+import in.hocg.validator.validations.Required
 import in.hocg.validator.validations.Size
 
 /**
@@ -9,18 +12,22 @@ import in.hocg.validator.validations.Size
  * Created 16-11-17.
  */
 class ValidatorTest extends GroovyTestCase {
-    Map<String, String[]> params = new HashMap<String, String[]>(){{
-        put("name", ["az"] as String[]);
-    }};
-    HashMap<String, String[]> rules = new HashMap<String, String[]>() {{
-        put("name", ["required", "min:5", "regex:^[a-z]+\$", "size:0"] as String[]);
-    }};
+    def params = [
+            "name":["az"] as String[]
+    ];
+    def rules = [
+            "name":["required", "min:5", "regex:^[a-z]+\$", "size:0"] as String[]
+    ];
 
     Validator validator;
     @Override
     void setUp() {
+        Validator.load([
+                "required": new Required(),
+                "min": new Min(),
+                "regex": new Regex()
+        ])
         validator = new Validator();
-
     }
 
     void testExtend() {

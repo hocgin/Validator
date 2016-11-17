@@ -1,9 +1,6 @@
 package in.hocg.validator;
 
 import com.sun.istack.internal.NotNull;
-import in.hocg.validator.validations.Min;
-import in.hocg.validator.validations.Regex;
-import in.hocg.validator.validations.Required;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,10 +33,14 @@ public class Validator implements Cloneable {
     private Map<String, String> messages;
     private Map<String, String> customAttributes;
 
-    static {
-        GLOBAL_VALIDATIONS.put("required", new Required());
-        GLOBAL_VALIDATIONS.put("min", new Min());
-        GLOBAL_VALIDATIONS.put("regex", new Regex());
+    /**
+     * 装载
+     * @param validation
+     * @return
+     */
+    public static Map<String, Validation> load(Map<String, Validation> validation) {
+        GLOBAL_VALIDATIONS.putAll(validation);
+        return GLOBAL_VALIDATIONS;
     }
 
 
