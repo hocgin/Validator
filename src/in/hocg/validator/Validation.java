@@ -1,5 +1,7 @@
 package in.hocg.validator;
 
+import in.hocg.validator.utils.ToolKit;
+
 import java.util.Map;
 
 /**
@@ -49,7 +51,7 @@ public abstract class Validation {
         String[] parameters;
         if (parametersStr.contains(",")) {
             parameters = parametersStr.split("\\,");
-            parameters = StringsUtil.trimElement(parameters);
+            parameters = ToolKit.trimElement(parameters);
         } else {
             parameters = new String[]{parametersStr.trim()};
         }

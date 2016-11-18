@@ -1,6 +1,7 @@
 package in.hocg.validator;
 
 import com.sun.istack.internal.NotNull;
+import in.hocg.validator.utils.ToolKit;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -83,10 +84,10 @@ public class Validator implements Cloneable {
                         && !validation.validate(filedName, value, parameters)) { // 校验失败
                     String message;
                     if (customAttributes == null
-                            || StringsUtil.isEmpty(message = customAttributes.get(filedName))) {
+                            || ToolKit.isEmpty(message = customAttributes.get(filedName))) {
                         String template;
                         if (messages != null
-                                && !StringsUtil.isEmpty(template = messages.get(dictate))) {
+                                && !ToolKit.isEmpty(template = messages.get(dictate))) {
                             // 模板定义的错误信息
                             message = validation.replace(template, filedName, rules, parameters);
                         } else {
@@ -316,7 +317,6 @@ public class Validator implements Cloneable {
         clone.localValidations.put(attribute, validation);
         return clone;
     }
-
 
     /**
      * 钩子方法 校验完成后回调
