@@ -48,3 +48,5 @@ validator.after(new Validator.AfterListener() {
 ```
 
 Bye.Bye.
+## LICENSE
+[MIT LICENSE](/LICENSE)

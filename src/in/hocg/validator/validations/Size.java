@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class Size extends Validation {
     @Override
-    public boolean validate(String filedName, String[] values, String[] parameters) {
+    public boolean validate(Map<String, String[]> request, String filedName, String[] values, String[] parameters) {
         if (values != null) {
             for (String value : values) {
                 if (value.length() > Long.valueOf(parameters[0])) {
@@ -26,12 +26,12 @@ public class Size extends Validation {
     }
 
     @Override
-    public String error(String filedName, Map<String, String[]> rule, String[] parameters) {
+    public String error(Map<String, String[]> request, String filedName, Map<String, String[]> rule, String[] parameters) {
         return String.format("%s 的长度 不能小于 %s", filedName, parameters[0]);
     }
 
     @Override
-    public String replace(String message, String filedName, Map<String, String[]> rule, String[] parameters) {
+    public String replace(Map<String, String[]> request, String message, String filedName, Map<String, String[]> rule, String[] parameters) {
         return message.replace(":size", parameters[0]);
     }
 }

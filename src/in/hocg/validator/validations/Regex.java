@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class Regex extends Validation {
     @Override
-    public boolean validate(String filedName, String[] values, String[] parameters) {
+    public boolean validate(Map<String, String[]> request, String filedName, String[] values, String[] parameters) {
         if (values != null) {
             for (String value : values) {
                 if (!_isMatch(parameters[0], value)) {
@@ -24,7 +24,7 @@ public class Regex extends Validation {
     }
 
     @Override
-    public String error(String filedName, Map<String, String[]> rule, String[] parameters) {
+    public String error(Map<String, String[]> request, String filedName, Map<String, String[]> rule, String[] parameters) {
         return String.format("%s 不满足正则/%s/", filedName, parameters[0]);
     }
 

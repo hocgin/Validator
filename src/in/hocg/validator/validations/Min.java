@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class Min extends Validation {
     @Override
-    public boolean validate(String filedName, String[] values, String[] parameters) {
+    public boolean validate(Map<String, String[]> request, String filedName, String[] values, String[] parameters) {
         if (values != null) {
             for (String value : values) {
                 if (!_isNumeric(value)) return false;
@@ -25,7 +25,7 @@ public class Min extends Validation {
     }
 
     @Override
-    public String error(String filedName, Map<String, String[]> rule, String[] parameters) {
+    public String error(Map<String, String[]> request, String filedName, Map<String, String[]> rule, String[] parameters) {
         return String.format("%s 不能小于 %s", filedName, parameters[0]);
     }
 }

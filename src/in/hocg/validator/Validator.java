@@ -81,7 +81,7 @@ public class Validator implements Cloneable {
                     validation = validations.get(dictate = attribute);
                 }
                 if (validation != null
-                        && !validation.validate(filedName, value, parameters)) { // 校验失败
+                        && !validation.validate(request, filedName, value, parameters)) { // 校验失败
                     String message;
                     if (customAttributes == null
                             || ToolKit.isEmpty(message = customAttributes.get(filedName))) {
@@ -89,10 +89,10 @@ public class Validator implements Cloneable {
                         if (messages != null
                                 && !ToolKit.isEmpty(template = messages.get(dictate))) {
                             // 模板定义的错误信息
-                            message = validation.replace(template, filedName, rules, parameters);
+                            message = validation.replace(request, template, filedName, rules, parameters);
                         } else {
                             // 默认错误信息
-                            message = validation.error(filedName, rules, parameters);
+                            message = validation.error(request, filedName, rules, parameters);
                         }
                     }
                     errors.add(filedName, message);

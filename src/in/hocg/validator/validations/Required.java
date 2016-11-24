@@ -13,12 +13,12 @@ import java.util.Map;
 public class Required extends Validation {
 
     @Override
-    public boolean validate(String filedName, String[] value, String[] parameters) {
+    public boolean validate(Map<String, String[]> request, String filedName, String[] value, String[] parameters) {
         return !(value == null || value.length == 0);
     }
 
     @Override
-    public String error(String filedName, Map<String, String[]> rule, String[] parameters) {
+    public String error(Map<String, String[]> request, String filedName, Map<String, String[]> rule, String[] parameters) {
         return String.format("%s 不能为空", filedName);
     }
 }
